@@ -17,3 +17,5 @@ This node script is a simple C compiled tester. Using it is very simple, just fo
 * run *npm start* to see the magic
 
 If you think about it, because of the formatting of the files *output_folder*, *real_output_folder* and *result_folder* can be the same, but *test_folder* must be different, in order to don't catch extra txt files that are not test. 
+
+**Important:** avoid using relative paths (just use absolute path) if you dont have the folders in the same directory of the executable; do not use test name with spaces, fill them with somenthing. For istance *test 1.txt* will not work, but *test_1.txt* will. 

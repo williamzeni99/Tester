@@ -1,8 +1,6 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { stdout, stderr } = require('process');
-const exec = require('child_process').exec;
 
 const config = getConfig();
 
@@ -108,14 +106,24 @@ function main(){
             var output_path = path.join(config.output_folder, path.parse(files[i]).name+"_output.txt");
             var real_output_path =  path.join(config.real_output_folder, path.parse(files[i]).name+"_realoutput.txt");
             var command = config.exe_path+" < "+files[i]+" > "+ output_path; 
-            execSync(command); 
-            var output = fs.readFileSync(output_path); 
-            var real_output = fs.readFileSync(real_output_path); 
-            data[path.parse(files[i]).name] = output.equals(real_output) ? "SUCCESSFUL": "FAILED";
+            try{
+                execSync(command); 
+            }catch(err){
+                console.log("ERROR: somenthing unexpected happend\n"+err); 
+                process.exit(); 
+            }
+            var output = fs.readFileSync(output_path);
+            try{
+                var real_output = fs.readFileSync(real_output_path); 
+                data[path.parse(files[i]).name] = output.equals(real_output) ? "SUCCESSFUL": "FAILED";
+                console.log("test "+path.parse(files[i]).name+" completed ... [" + (parseInt(i)+1)+"/"+(files.length)+"]");
+            }catch(err){
+                data[path.parse(files[i]).name] = "NOT COMPLETED";
+                console.log("test "+path.parse(files[i]).name+" not completed, real output not found ... ["+(parseInt(i)+1)+"/"+(files.length)+"]");
+            }
         }
 
-        fs.writeFileSync(path.join(config.result_folder, "test_result.txt"), JSON.stringify(data, null, 4))
-        console.log(data)
+        fs.writeFileSync(path.join(config.result_folder, "test_result.txt"), JSON.stringify(data, null, 4)) 
     })
     .catch((err)=>{
         console.log(err); 
