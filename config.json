@@ -1,0 +1,7 @@
+{
+    "exe_path": "path/to/execfile or C:\\path\\to\\file.exe", 
+    "test_folder": "path/to/test/folder",
+    "output_folder":"path/to/output/folder", 
+    "real_output_folder":"path/to/real/output", 
+    "result_folder":"path/where/save/test/result"
+}
